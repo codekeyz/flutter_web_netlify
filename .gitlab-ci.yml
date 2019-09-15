@@ -1,0 +1,35 @@
+variables:
+  FLUTTER_VERSION: 'https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.9.1+hotfix.2-stable.tar.xz'
+ 
+stages:
+  - build
+  - publish
+
+Build Web:
+  stage: build
+  script:
+     # flutter sdk setup
+    - apt-get --quiet update --yes
+    - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
+    - wget -q --output-document=flutter-sdk.tar.xz $FLUTTER_VERSION
+    - tar xf flutter-sdk.tar.xz
+    - export PATH=$PATH:$PWD/flutter/bin
+    - chmod g+rw pubspec.lock
+    # adding flutter web support
+    - flutter channel master
+    - flutter upgrade
+    - flutter config --enable-web
+    - flutter build web --release
+  artifacts:
+    paths:
+      - build/web
+    expire_in: 5 days
+
+Deploy Netlify:
+  image: node:8
+  stage: publish
+  script:
+    - npm install netlify-cli -g
+    - export NETLIFY_SITE_ID=$NETLIFY_SITE_ID
+    - export NETLIFY_AUTH_TOKEN=$NETLIFY_AUTH_TOKEN
+    - netlify deploy --dir=./build/web --prod
