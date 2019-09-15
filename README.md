@@ -7,10 +7,13 @@ In **GitLab-CI**, we setup our Flutter Web Environment, generate a web build, th
 
 ## Prerequisites
 
-Get the following details from your netlify-app dashboard
+- Get the following details from your netlify-app dashboard
 
- - `NETLIFY_SITE_ID`
- - `NETLIFY_AUTH_TOKEN`
+    - `NETLIFY_SITE_ID`
+    - `NETLIFY_AUTH_TOKEN`
+
+
+- Store them inside your **ENVIRONMENTAL VARIABLES** in your project on **GitLab**.
 
 <br>
 <p align="center">
